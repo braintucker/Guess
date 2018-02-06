@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> celebUrls = new ArrayList<String>();
     ArrayList<String> celebNames = new ArrayList<String>();
     int pickedCeleb = 0;
+
+    ImageView imageView;
 
 
     public class DownloadImages extends  AsyncTask<String, Void, Bitmap> {
@@ -113,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        imageView = (ImageView) findViewById(R.id.imageView);
+
+        //using download content class to get the content from the url
         DownloadContent dwnld = new DownloadContent();
         String result = null;
 
@@ -145,6 +151,18 @@ public class MainActivity extends AppCompatActivity {
             //Creating the random numeber to pick random celebs
             Random random = new Random();
             pickedCeleb = random.nextInt(celebUrls.size());
+
+            //using download images to load the images from the urls that were retrieved with download content
+            DownloadImages imageTask = new DownloadImages();
+
+            Bitmap celebImage;
+
+            celebImage = imageTask.execute(celebUrls.get(pickedCeleb)).get();
+
+            imageView.setImageBitmap(celebImage);
+
+
+
 
         }
         catch (ExecutionException e){
